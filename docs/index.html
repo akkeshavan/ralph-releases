@@ -595,11 +595,6 @@ Copy-Item ralph.exe "C:\tools\ralph\"
       </div>
     </div>
 
-    <div class="api-box" style="margin-top:1rem; border-color: #4a3520;">
-      <h3>Kimi <span class="coming-soon">Coming soon</span></h3>
-      <p>Support for Kimi (Moonshot AI) is planned for a future release.</p>
-    </div>
-
     <br />
     <h2>Usage</h2>
     <p class="section-lead">Point Ralph at your project and give it a task.</p>
@@ -608,7 +603,7 @@ Copy-Item ralph.exe "C:\tools\ralph\"
       <div class="code-header"><span>Interactive mode</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
       <pre><span class="comment"># Launch in your project directory</span>
 <span class="cmd">cd /path/to/your/project
-ralph --deepseek</span>
+ralph</span>
 
 <span class="comment"># Type tasks at the >> prompt</span>
 <span class="cmd">&gt;&gt; explain the structure of this codebase
@@ -620,13 +615,19 @@ ralph --deepseek</span>
     <div class="code-block">
       <div class="code-header"><span>Single-shot mode</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
       <pre><span class="comment"># Run a single task and exit</span>
-<span class="cmd">ralph --deepseek "write unit tests for the auth module"</span>
+<span class="cmd">ralph "write unit tests for the auth module"</span>
+
+<span class="comment"># Use the pro model (extended thinking)</span>
+<span class="cmd">ralph --pro "refactor the auth module"</span>
+
+<span class="comment"># Resume the last session</span>
+<span class="cmd">ralph --resume</span>
 
 <span class="comment"># Target a specific directory</span>
-<span class="cmd">ralph --deepseek "fix the failing tests" --workspace /path/to/project</span>
+<span class="cmd">ralph "fix the failing tests" --workspace /path/to/project</span>
 
 <span class="comment"># Preview actions without making changes</span>
-<span class="cmd">ralph --deepseek "..." --dry-run</span></pre>
+<span class="cmd">ralph "..." --dry-run</span></pre>
     </div>
 
     <div class="code-block">
