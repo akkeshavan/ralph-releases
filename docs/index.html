@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ralph — Agentic Code Generation CLI</title>
+  <style>
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #30363d;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --accent:   #58a6ff;
+      --accent2:  #3fb950;
+      --danger:   #f85149;
+      --code-bg:  #1f2428;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: var(--text); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: var(--muted); font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: #1c2d1e;
+      color: var(--accent2);
+      border: 1px solid #2d4a31;
+      border-radius: 20px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #e6edf3 0%, #58a6ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; text-decoration: none; }
+    .btn-primary { background: var(--accent); color: #0d1117; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+
+    /* ── Sections ── */
+    section { padding: 4rem 2rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    .section-lead {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      max-width: 620px;
+    }
+
+    /* ── Loop phases ── */
+    .phases {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+    }
+    .phase {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .phase-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+    .phase h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+    .phase p { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── Features ── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+    }
+    .feature h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+    .feature p { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── Download tabs ── */
+    .tab-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .tab {
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab:hover { color: var(--text); border-color: var(--accent); }
+    .tab.active {
+      background: var(--accent);
+      color: #0d1117;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Code blocks ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 4px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--text); }
+    .copy-btn.copied { color: var(--accent2); border-color: var(--accent2); }
+    pre {
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    .comment { color: var(--muted); }
+    .cmd { color: var(--text); }
+
+    /* ── Step list ── */
+    .steps { counter-reset: step; list-style: none; }
+    .steps li {
+      counter-increment: step;
+      padding: 0.6rem 0 0.6rem 2.5rem;
+      position: relative;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.6rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.5rem;
+      text-align: center;
+    }
+    .steps li strong { color: var(--text); }
+
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ── API key section ── */
+    .api-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .api-box h3 { margin-bottom: 0.5rem; font-size: 1rem; }
+    .api-box p { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
+    .coming-soon {
+      display: inline-block;
+      background: #2d2016;
+      color: #e3b341;
+      border: 1px solid #4a3520;
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Version badge ── */
+    #version-badge {
+      display: inline-block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.4rem; }
+      nav { padding: 1rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <span class="nav-logo">⚡ Ralph</span>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#download">Download</a>
+    <a href="#setup">Setup</a>
+    <a href="https://github.com/akkeshavan/ralph-releases/releases">Releases</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-badge">Powered by DeepSeek</div>
+  <h1>Ralph</h1>
+  <p>An agentic code generation CLI that explores, understands, implements, and verifies — autonomously.</p>
+  <div class="hero-buttons">
+    <a class="btn btn-primary" href="#download">Download Ralph</a>
+    <a class="btn btn-secondary" href="#how-it-works">How it works</a>
+  </div>
+</div>
+
+<hr />
+
+<!-- ── How it works ── -->
+<section id="how-it-works">
+  <div class="container">
+    <h2>How it works</h2>
+    <p class="section-lead">Ralph runs an explicit four-phase loop on every task. It doesn't guess — it explores your codebase first, then acts.</p>
+    <div class="phases">
+      <div class="phase">
+        <div class="phase-num">Phase 1</div>
+        <h3>Explore</h3>
+        <p>Searches the codebase using symbol lookup, regex search, and file outlines to locate relevant code.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-num">Phase 2</div>
+        <h3>Understand</h3>
+        <p>Reads the minimum necessary — the target function, its tests, and immediate callers.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-num">Phase 3</div>
+        <h3>Implement</h3>
+        <p>Applies changes atomically. Multi-location edits happen in a single call to avoid partial states.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-num">Phase 4</div>
+        <h3>Verify</h3>
+        <p>Runs tests after every change. Will not declare done until tests pass.</p>
+      </div>
+    </div>
+
+    <br />
+    <div class="features">
+      <div class="feature">
+        <h3>🧠 Adaptive reasoning</h3>
+        <p>Automatically switches to extended thinking after repeated edit failures or test failures.</p>
+      </div>
+      <div class="feature">
+        <h3>💾 Session persistence</h3>
+        <p>Resume where you left off. Context, edits, and history carry across tasks in the same session.</p>
+      </div>
+      <div class="feature">
+        <h3>📸 Checkpoints</h3>
+        <p>Snapshot file state and conversation history before destructive operations. Revert any time.</p>
+      </div>
+      <div class="feature">
+        <h3>🔍 Rich tool set</h3>
+        <p>File outlines, regex search, glob, symbol index, git diff, and more — all available to the agent.</p>
+      </div>
+      <div class="feature">
+        <h3>🎯 Context-aware nudges</h3>
+        <p>Detects when the agent is stuck in a read loop or editing without testing and course-corrects.</p>
+      </div>
+      <div class="feature">
+        <h3>🌐 Web search</h3>
+        <p>Optionally connects to Brave Search or SerpAPI for up-to-date knowledge during tasks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- ── Download ── -->
+<section id="download">
+  <div class="container">
+    <h2>Download <span id="version-badge">loading...</span></h2>
+    <p class="section-lead">Choose your platform below for step-by-step installation instructions.</p>
+
+    <div class="tab-bar">
+      <button class="tab active" onclick="showTab('mac-arm')">macOS Apple Silicon</button>
+      <button class="tab" onclick="showTab('mac-intel')">macOS Intel</button>
+      <button class="tab" onclick="showTab('linux-x86')">Linux x86-64</button>
+      <button class="tab" onclick="showTab('linux-arm')">Linux ARM64</button>
+      <button class="tab" onclick="showTab('windows')">Windows</button>
+    </div>
+
+    <!-- macOS Apple Silicon -->
+    <div id="tab-mac-arm" class="tab-panel active">
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For Macs with M1, M2, M3, or M4 chips.</p>
+      <ol class="steps">
+        <li><strong>Download the binary</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre id="dl-mac-arm"><span class="comment"># Download</span>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-apple-darwin.tar.gz</span></pre>
+      </div>
+      <ol class="steps" start="2">
+        <li><strong>Extract and install</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">tar xzf ralph.tar.gz
+sudo mv ralph-*/ralph /usr/local/bin/ralph
+rm -rf ralph.tar.gz ralph-*/</span></pre>
+      </div>
+      <ol class="steps" start="3">
+        <li><strong>Verify the installation</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ralph --help</span></pre>
+      </div>
+      <ol class="steps" start="4">
+        <li><strong>Uninstall</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
+      </div>
+    </div>
+
+    <!-- macOS Intel -->
+    <div id="tab-mac-intel" class="tab-panel">
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For Macs with Intel processors (2020 and earlier).</p>
+      <ol class="steps">
+        <li><strong>Download the binary</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre id="dl-mac-intel"><span class="comment"># Download</span>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-apple-darwin.tar.gz</span></pre>
+      </div>
+      <ol class="steps" start="2">
+        <li><strong>Extract and install</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">tar xzf ralph.tar.gz
+sudo mv ralph-*/ralph /usr/local/bin/ralph
+rm -rf ralph.tar.gz ralph-*/</span></pre>
+      </div>
+      <ol class="steps" start="3">
+        <li><strong>Verify the installation</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ralph --help</span></pre>
+      </div>
+      <ol class="steps" start="4">
+        <li><strong>Uninstall</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
+      </div>
+    </div>
+
+    <!-- Linux x86-64 -->
+    <div id="tab-linux-x86" class="tab-panel">
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For standard 64-bit Linux (Ubuntu, Debian, Fedora, Arch, etc.).</p>
+      <ol class="steps">
+        <li><strong>Download the binary</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre id="dl-linux-x86"><span class="comment"># Download</span>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-gnu.tar.gz</span></pre>
+      </div>
+      <ol class="steps" start="2">
+        <li><strong>Extract and install</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">tar xzf ralph.tar.gz
+sudo mv ralph-*/ralph /usr/local/bin/ralph
+rm -rf ralph.tar.gz ralph-*/</span></pre>
+      </div>
+      <ol class="steps" start="3">
+        <li><strong>Verify the installation</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ralph --help</span></pre>
+      </div>
+      <ol class="steps" start="4">
+        <li><strong>Uninstall</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
+      </div>
+    </div>
+
+    <!-- Linux ARM64 -->
+    <div id="tab-linux-arm" class="tab-panel">
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For ARM64 Linux — AWS Graviton, Raspberry Pi 5, etc.</p>
+      <ol class="steps">
+        <li><strong>Download the binary</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre id="dl-linux-arm"><span class="comment"># Download</span>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-gnu.tar.gz</span></pre>
+      </div>
+      <ol class="steps" start="2">
+        <li><strong>Extract and install</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">tar xzf ralph.tar.gz
+sudo mv ralph-*/ralph /usr/local/bin/ralph
+rm -rf ralph.tar.gz ralph-*/</span></pre>
+      </div>
+      <ol class="steps" start="3">
+        <li><strong>Verify the installation</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ralph --help</span></pre>
+      </div>
+      <ol class="steps" start="4">
+        <li><strong>Uninstall</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
+      </div>
+    </div>
+
+    <!-- Windows -->
+    <div id="tab-windows" class="tab-panel">
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For Windows 10/11 x86-64. Run commands in PowerShell.</p>
+      <ol class="steps">
+        <li><strong>Download the binary</strong> — <a id="win-dl-link" href="https://github.com/akkeshavan/ralph-releases/releases/latest">click here to download</a> the <code>.zip</code> file for Windows x86-64.</li>
+        <li><strong>Extract the zip</strong> — right-click the downloaded file and select <em>Extract All</em>.</li>
+        <li><strong>Move the binary</strong> — move <code>ralph.exe</code> to a folder that is in your <code>PATH</code>, for example <code>C:\Windows\System32</code>, or create a dedicated folder and add it to PATH:</li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>PowerShell (run as Administrator)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="comment"># Create a bin folder and add it to PATH (one-time setup)</span>
+<span class="cmd">New-Item -ItemType Directory -Force -Path "C:\tools\ralph"
+Copy-Item ralph.exe "C:\tools\ralph\"
+[Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\tools\ralph", "Machine")</span></pre>
+      </div>
+      <ol class="steps" start="4">
+        <li><strong>Restart PowerShell</strong>, then verify:</li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ralph --help</span></pre>
+      </div>
+      <ol class="steps" start="5">
+        <li><strong>Uninstall</strong></li>
+      </ol>
+      <div class="code-block">
+        <div class="code-header"><span>PowerShell (run as Administrator)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">Remove-Item "C:\tools\ralph\ralph.exe"</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- ── Setup ── -->
+<section id="setup">
+  <div class="container">
+    <h2>Setup</h2>
+    <p class="section-lead">Ralph requires an API key for the LLM provider. Set it as an environment variable before running.</p>
+
+    <div class="api-box">
+      <h3>DeepSeek</h3>
+      <p>Get your API key from <a href="https://platform.deepseek.com/" target="_blank">platform.deepseek.com</a>.</p>
+      <div class="code-block">
+        <div class="code-header"><span>macOS / Linux — add to ~/.zshrc or ~/.bashrc</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">export DEEPSEEK_API_KEY="sk-..."</span></pre>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span>Windows PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">[Environment]::SetEnvironmentVariable("DEEPSEEK_API_KEY", "sk-...", "User")</span></pre>
+      </div>
+    </div>
+
+    <div class="api-box" style="margin-top:1rem; border-color: #4a3520;">
+      <h3>Kimi <span class="coming-soon">Coming soon</span></h3>
+      <p>Support for Kimi (Moonshot AI) is planned for a future release.</p>
+    </div>
+
+    <br />
+    <h2>Usage</h2>
+    <p class="section-lead">Point Ralph at your project and give it a task.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span>Interactive mode</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># Launch in your project directory</span>
+<span class="cmd">cd /path/to/your/project
+ralph --deepseek</span>
+
+<span class="comment"># Type tasks at the >> prompt</span>
+<span class="cmd">&gt;&gt; explain the structure of this codebase
+&gt;&gt; add error handling to the database module
+&gt;&gt; run the tests and fix any failures
+&gt;&gt; exit</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span>Single-shot mode</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># Run a single task and exit</span>
+<span class="cmd">ralph --deepseek "write unit tests for the auth module"</span>
+
+<span class="comment"># Target a specific directory</span>
+<span class="cmd">ralph --deepseek "fix the failing tests" --workspace /path/to/project</span>
+
+<span class="comment"># Preview actions without making changes</span>
+<span class="cmd">ralph --deepseek "..." --dry-run</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span>Optional: enable web search</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># Add one of these to enable web search during tasks</span>
+<span class="cmd">export BRAVE_API_KEY="BSA..."      # Brave Search (preferred)
+export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
+    </div>
+  </div>
+</section>
+
+<hr />
+
+<!-- ── Footer ── -->
+<footer>
+  <p>Ralph is distributed as a pre-built binary. &nbsp;·&nbsp; <a href="https://github.com/akkeshavan/ralph-releases/releases">All releases</a></p>
+</footer>
+
+<script>
+  // ── Tab switching ──
+  function showTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ── Copy button ──
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── Fetch latest version and update download links ──
+  fetch('https://api.github.com/repos/akkeshavan/ralph-releases/releases/latest')
+    .then(r => r.json())
+    .then(data => {
+      const tag = data.tag_name; // e.g. "v0.2.1"
+      const ver = tag; // keep the v prefix
+
+      document.getElementById('version-badge').textContent = ver;
+
+      const targets = {
+        'mac-arm':    'aarch64-apple-darwin',
+        'mac-intel':  'x86_64-apple-darwin',
+        'linux-x86':  'x86_64-unknown-linux-gnu',
+        'linux-arm':  'aarch64-unknown-linux-gnu',
+      };
+
+      for (const [key, target] of Object.entries(targets)) {
+        const el = document.getElementById('dl-' + key.replace('-', '-'));
+        if (el) {
+          const filename = `ralph-${ver}-${target}.tar.gz`;
+          const url = `https://github.com/akkeshavan/ralph-releases/releases/download/${ver}/${filename}`;
+          el.innerHTML =
+            `<span class="comment"># Download</span>\n` +
+            `<span class="cmd">curl -L -o ralph.tar.gz ${url}</span>`;
+        }
+      }
+
+      // Windows link
+      const winLink = document.getElementById('win-dl-link');
+      if (winLink) {
+        const winFile = `ralph-${ver}-x86_64-pc-windows-msvc.zip`;
+        winLink.href = `https://github.com/akkeshavan/ralph-releases/releases/download/${ver}/${winFile}`;
+        winLink.textContent = `download ${winFile}`;
+      }
+    })
+    .catch(() => {
+      document.getElementById('version-badge').textContent = 'latest';
+    });
+</script>
+
+</body>
+</html>
