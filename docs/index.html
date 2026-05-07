@@ -527,14 +527,16 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
 
     <!-- Linux x86-64 -->
     <div id="tab-linux-x86" class="tab-panel">
-      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For standard 64-bit Linux (Ubuntu, Debian, Fedora, Arch, etc.).</p>
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For standard 64-bit Linux (Ubuntu, Debian, Fedora, Arch, Alpine, etc.).</p>
+
+      <p style="margin-bottom:0.5rem;"><strong>Option A — musl (recommended)</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Statically linked — works on Ubuntu 18.04+, Debian 10+, Alpine, and any x86-64 Linux</span></p>
       <ol class="steps">
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-linux-x86"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-gnu.tar.gz</span></pre>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-musl.tar.gz</span></pre>
       </div>
       <ol class="steps" start="2">
         <li><strong>Extract and install</strong></li>
@@ -559,18 +561,27 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
       </div>
+
+      <p style="margin-top:1.5rem;margin-bottom:0.5rem;"><strong>Option B — glibc</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Requires glibc 2.39+ (Ubuntu 24.04+, Fedora 40+, Debian 13+)</span></p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
+        <pre id="dl-linux-x86-gnu"><span class="comment"># Download</span>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-gnu.tar.gz</span></pre>
+      </div>
     </div>
 
     <!-- Linux ARM64 -->
     <div id="tab-linux-arm" class="tab-panel">
-      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For ARM64 Linux — AWS Graviton, Raspberry Pi 5, etc.</p>
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For ARM64 Linux — AWS Graviton, Raspberry Pi 5, Oracle Ampere, etc.</p>
+
+      <p style="margin-bottom:0.5rem;"><strong>Option A — musl (recommended)</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Statically linked — works on Ubuntu 18.04+, Debian 10+, Alpine, and any ARM64 Linux</span></p>
       <ol class="steps">
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-linux-arm"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-gnu.tar.gz</span></pre>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-musl.tar.gz</span></pre>
       </div>
       <ol class="steps" start="2">
         <li><strong>Extract and install</strong></li>
@@ -594,6 +605,13 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
+      </div>
+
+      <p style="margin-top:1.5rem;margin-bottom:0.5rem;"><strong>Option B — glibc</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Requires glibc 2.39+ (Ubuntu 24.04+, Fedora 40+, Debian 13+)</span></p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
+        <pre id="dl-linux-arm-gnu"><span class="comment"># Download</span>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-gnu.tar.gz</span></pre>
       </div>
     </div>
 
@@ -732,14 +750,16 @@ export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
       document.getElementById('version-badge').textContent = ver;
 
       const targets = {
-        'mac-arm':    'aarch64-apple-darwin',
-        'mac-intel':  'x86_64-apple-darwin',
-        'linux-x86':  'x86_64-unknown-linux-gnu',
-        'linux-arm':  'aarch64-unknown-linux-gnu',
+        'mac-arm':       'aarch64-apple-darwin',
+        'mac-intel':     'x86_64-apple-darwin',
+        'linux-x86':     'x86_64-unknown-linux-musl',
+        'linux-x86-gnu': 'x86_64-unknown-linux-gnu',
+        'linux-arm':     'aarch64-unknown-linux-musl',
+        'linux-arm-gnu': 'aarch64-unknown-linux-gnu',
       };
 
       for (const [key, target] of Object.entries(targets)) {
-        const el = document.getElementById('dl-' + key.replace('-', '-'));
+        const el = document.getElementById('dl-' + key);
         if (el) {
           const filename = `ralph-${ver}-${target}.tar.gz`;
           const url = `https://github.com/akkeshavan/ralph-releases/releases/download/${ver}/${filename}`;
