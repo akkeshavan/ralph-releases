@@ -177,42 +177,72 @@
 
     /* ── Code blocks ── */
     .code-block {
-      background: var(--code-bg);
+      background: #0d1117;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       margin: 1rem 0;
       overflow: hidden;
+      position: relative;
     }
     .code-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 0.5rem 1rem;
+      gap: 0.6rem;
+      padding: 0.55rem 1rem;
+      background: #161b22;
       border-bottom: 1px solid var(--border);
+      user-select: none;
+    }
+    /* macOS-style traffic-light dots */
+    .code-header::before {
+      content: "";
+      display: flex;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #ff5f57;
+      box-shadow: 20px 0 0 #febc2e, 40px 0 0 #28c840;
+      flex-shrink: 0;
+      margin-right: 28px; /* space for the 3 dots */
+    }
+    .code-header-label {
+      flex: 1;
+      text-align: center;
       font-size: 0.75rem;
       color: var(--muted);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      margin-left: -40px; /* optically center past the dots */
     }
     .copy-btn {
       background: none;
-      border: 1px solid var(--border);
+      border: none;
       color: var(--muted);
-      border-radius: 4px;
-      padding: 0.2rem 0.6rem;
-      font-size: 0.75rem;
+      padding: 0.2rem 0.3rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      transition: all 0.15s;
+      opacity: 0;
+      transition: opacity 0.15s, color 0.15s;
+      line-height: 1;
     }
-    .copy-btn:hover { color: var(--text); border-color: var(--text); }
-    .copy-btn.copied { color: var(--accent2); border-color: var(--accent2); }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { color: var(--text); }
+    .copy-btn.copied { color: var(--accent2); opacity: 1; }
     pre {
-      padding: 1rem;
+      padding: 1rem 1rem 1rem 1.25rem;
       overflow-x: auto;
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       font-size: 0.875rem;
-      line-height: 1.6;
+      line-height: 1.7;
     }
-    .comment { color: var(--muted); }
-    .cmd { color: var(--text); }
+    .comment { color: #6e7681; font-style: italic; }
+    /* Each .cmd span gets a green $ prompt */
+    .cmd {
+      color: #e6edf3;
+    }
+    .cmd::before {
+      content: "$ ";
+      color: #3fb950;
+      user-select: none;
+    }
 
     /* ── Step list ── */
     .steps { counter-reset: step; list-style: none; }
@@ -403,7 +433,7 @@
 
       <p style="margin-bottom:0.75rem;"><strong>Option A — Homebrew (recommended)</strong></p>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">brew tap akkeshavan/ralph
 brew install ralph</span></pre>
       </div>
@@ -417,7 +447,7 @@ brew install ralph</span></pre>
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-mac-arm"><span class="comment"># Download</span>
 <span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-apple-darwin.tar.gz</span></pre>
       </div>
@@ -425,7 +455,7 @@ brew install ralph</span></pre>
         <li><strong>Extract and install</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">tar xzf ralph.tar.gz
 sudo mv ralph-*/ralph /usr/local/bin/ralph
 rm -rf ralph.tar.gz ralph-*/</span></pre>
@@ -434,14 +464,14 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Verify the installation</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
       </div>
       <ol class="steps" start="4">
         <li><strong>Uninstall</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
       </div>
     </div>
@@ -452,7 +482,7 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
 
       <p style="margin-bottom:0.75rem;"><strong>Option A — Homebrew (recommended)</strong></p>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">brew tap akkeshavan/ralph
 brew install ralph</span></pre>
       </div>
@@ -466,7 +496,7 @@ brew install ralph</span></pre>
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-mac-intel"><span class="comment"># Download</span>
 <span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-apple-darwin.tar.gz</span></pre>
       </div>
@@ -474,7 +504,7 @@ brew install ralph</span></pre>
         <li><strong>Extract and install</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">tar xzf ralph.tar.gz
 sudo mv ralph-*/ralph /usr/local/bin/ralph
 rm -rf ralph.tar.gz ralph-*/</span></pre>
@@ -483,14 +513,14 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Verify the installation</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
       </div>
       <ol class="steps" start="4">
         <li><strong>Uninstall</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
       </div>
     </div>
@@ -502,7 +532,7 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-linux-x86"><span class="comment"># Download</span>
 <span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-gnu.tar.gz</span></pre>
       </div>
@@ -510,7 +540,7 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Extract and install</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">tar xzf ralph.tar.gz
 sudo mv ralph-*/ralph /usr/local/bin/ralph
 rm -rf ralph.tar.gz ralph-*/</span></pre>
@@ -519,14 +549,14 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Verify the installation</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
       </div>
       <ol class="steps" start="4">
         <li><strong>Uninstall</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
       </div>
     </div>
@@ -538,7 +568,7 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-linux-arm"><span class="comment"># Download</span>
 <span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-gnu.tar.gz</span></pre>
       </div>
@@ -546,7 +576,7 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Extract and install</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">tar xzf ralph.tar.gz
 sudo mv ralph-*/ralph /usr/local/bin/ralph
 rm -rf ralph.tar.gz ralph-*/</span></pre>
@@ -555,14 +585,14 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Verify the installation</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
       </div>
       <ol class="steps" start="4">
         <li><strong>Uninstall</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
       </div>
     </div>
@@ -576,7 +606,7 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <li><strong>Move the binary</strong> — move <code>ralph.exe</code> to a folder that is in your <code>PATH</code>, for example <code>C:\Windows\System32</code>, or create a dedicated folder and add it to PATH:</li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>PowerShell (run as Administrator)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">powershell (as Administrator)</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="comment"># Create a bin folder and add it to PATH (one-time setup)</span>
 <span class="cmd">New-Item -ItemType Directory -Force -Path "C:\tools\ralph"
 Copy-Item ralph.exe "C:\tools\ralph\"
@@ -586,14 +616,14 @@ Copy-Item ralph.exe "C:\tools\ralph\"
         <li><strong>Restart PowerShell</strong>, then verify:</li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">powershell</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
       </div>
       <ol class="steps" start="5">
         <li><strong>Uninstall</strong></li>
       </ol>
       <div class="code-block">
-        <div class="code-header"><span>PowerShell (run as Administrator)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">powershell (as Administrator)</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">Remove-Item "C:\tools\ralph\ralph.exe"</span></pre>
       </div>
     </div>
@@ -612,11 +642,11 @@ Copy-Item ralph.exe "C:\tools\ralph\"
       <h3>DeepSeek</h3>
       <p>Get your API key from <a href="https://platform.deepseek.com/" target="_blank">platform.deepseek.com</a>.</p>
       <div class="code-block">
-        <div class="code-header"><span>macOS / Linux — add to ~/.zshrc or ~/.bashrc</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">bash — ~/.zshrc or ~/.bashrc</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">export DEEPSEEK_API_KEY="sk-..."</span></pre>
       </div>
       <div class="code-block">
-        <div class="code-header"><span>Windows PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-header"><span class="code-header-label">powershell</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">[Environment]::SetEnvironmentVariable("DEEPSEEK_API_KEY", "sk-...", "User")</span></pre>
       </div>
     </div>
@@ -626,7 +656,7 @@ Copy-Item ralph.exe "C:\tools\ralph\"
     <p class="section-lead">Point Ralph at your project and give it a task.</p>
 
     <div class="code-block">
-      <div class="code-header"><span>Interactive mode</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <div class="code-header"><span class="code-header-label">bash — interactive mode</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
       <pre><span class="comment"># Launch in your project directory</span>
 <span class="cmd">cd /path/to/your/project
 ralph</span>
@@ -639,7 +669,7 @@ ralph</span>
     </div>
 
     <div class="code-block">
-      <div class="code-header"><span>Single-shot mode</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <div class="code-header"><span class="code-header-label">bash — single-shot mode</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
       <pre><span class="comment"># Run a single task and exit</span>
 <span class="cmd">ralph "write unit tests for the auth module"</span>
 
@@ -657,7 +687,7 @@ ralph</span>
     </div>
 
     <div class="code-block">
-      <div class="code-header"><span>Optional: enable web search</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <div class="code-header"><span class="code-header-label">bash — optional: web search</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
       <pre><span class="comment"># Add one of these to enable web search during tasks</span>
 <span class="cmd">export BRAVE_API_KEY="BSA..."      # Brave Search (preferred)
 export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
@@ -686,9 +716,9 @@ export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
     const pre = btn.closest('.code-block').querySelector('pre');
     const text = pre.innerText;
     navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = 'Copied!';
+      btn.textContent = '✓';
       btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      setTimeout(() => { btn.textContent = '⧉'; btn.classList.remove('copied'); }, 2000);
     });
   }
 
