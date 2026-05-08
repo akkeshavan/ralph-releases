@@ -747,11 +747,11 @@ export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
     });
   }
 
-  // ── Fetch latest version from akkeshavan/ralph and update download links ──
-  fetch('https://api.github.com/repos/akkeshavan/ralph/releases/latest')
+  // ── Fetch latest version from akkeshavan/ralph-releases and update download links ──
+  fetch('https://api.github.com/repos/akkeshavan/ralph-releases/releases/latest')
     .then(r => r.json())
     .then(data => {
-      const ver = data.tag_name; // e.g. "ralphy-v0.2.0"
+      const ver = data.tag_name; // e.g. "v0.4.0"
 
       document.getElementById('version-badge').textContent = ver;
 
@@ -766,7 +766,7 @@ export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
         const el = document.getElementById('dl-' + key);
         if (el) {
           const filename = `ralph-${ver}-${target}.tar.gz`;
-          const url = `https://github.com/akkeshavan/ralph/releases/download/${ver}/${filename}`;
+          const url = `https://github.com/akkeshavan/ralph-releases/releases/download/${ver}/${filename}`;
           el.innerHTML =
             `<span class="comment"># Download</span>\n` +
             `<span class="cmd">curl -L -o ralph.tar.gz ${url}</span>`;
@@ -776,7 +776,7 @@ export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
       const winLink = document.getElementById('win-dl-link');
       if (winLink) {
         const winFile = `ralph-${ver}-x86_64-pc-windows-msvc.zip`;
-        winLink.href = `https://github.com/akkeshavan/ralph/releases/download/${ver}/${winFile}`;
+        winLink.href = `https://github.com/akkeshavan/ralph-releases/releases/download/${ver}/${winFile}`;
         winLink.textContent = `download ${winFile}`;
       }
     })
