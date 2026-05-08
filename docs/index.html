@@ -94,6 +94,48 @@
     .btn-primary { background: var(--accent); color: #0d1117; }
     .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 
+    /* ── Mode cards ── */
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 0 2rem;
+    }
+    @media (max-width: 640px) { .modes { grid-template-columns: 1fr; } }
+    .mode-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .mode-card.featured { border-color: var(--accent); }
+    .mode-badge {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 0.2rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .badge-managed { background: #1a2340; color: var(--accent); border: 1px solid #243460; }
+    .badge-byok    { background: #1c2d1e; color: var(--accent2); border: 1px solid #2d4a31; }
+    .mode-card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .mode-card p  { font-size: 0.875rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .mode-cmd {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.825rem;
+      color: var(--accent2);
+    }
+    .mode-cmd .muted { color: var(--muted); }
+
     /* ── Sections ── */
     section { padding: 4rem 2rem; }
     .container { max-width: 900px; margin: 0 auto; }
@@ -193,7 +235,6 @@
       border-bottom: 1px solid var(--border);
       user-select: none;
     }
-    /* macOS-style traffic-light dots */
     .code-header::before {
       content: "";
       display: flex;
@@ -202,7 +243,7 @@
       background: #ff5f57;
       box-shadow: 20px 0 0 #febc2e, 40px 0 0 #28c840;
       flex-shrink: 0;
-      margin-right: 28px; /* space for the 3 dots */
+      margin-right: 28px;
     }
     .code-header-label {
       flex: 1;
@@ -210,7 +251,7 @@
       font-size: 0.75rem;
       color: var(--muted);
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-      margin-left: -40px; /* optically center past the dots */
+      margin-left: -40px;
     }
     .copy-btn {
       background: none;
@@ -234,15 +275,8 @@
       line-height: 1.7;
     }
     .comment { color: #6e7681; font-style: italic; }
-    /* Each .cmd span gets a green $ prompt */
-    .cmd {
-      color: #e6edf3;
-    }
-    .cmd::before {
-      content: "$ ";
-      color: #3fb950;
-      user-select: none;
-    }
+    .cmd { color: #e6edf3; }
+    .cmd::before { content: "$ "; color: #3fb950; user-select: none; }
 
     /* ── Step list ── */
     .steps { counter-reset: step; list-style: none; }
@@ -277,26 +311,16 @@
     /* ── Divider ── */
     hr { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-    /* ── API key section ── */
-    .api-box {
+    /* ── Setup box ── */
+    .setup-box {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1.5rem;
       margin-top: 1.5rem;
     }
-    .api-box h3 { margin-bottom: 0.5rem; font-size: 1rem; }
-    .api-box p { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
-    .coming-soon {
-      display: inline-block;
-      background: #2d2016;
-      color: #e3b341;
-      border: 1px solid #4a3520;
-      border-radius: 4px;
-      padding: 0.1rem 0.5rem;
-      font-size: 0.75rem;
-      margin-left: 0.5rem;
-    }
+    .setup-box h3 { margin-bottom: 0.5rem; font-size: 1rem; }
+    .setup-box p { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
 
     /* ── Footer ── */
     footer {
@@ -333,31 +357,49 @@
 <nav>
   <span class="nav-logo">⚡ Ralph</span>
   <div class="nav-links">
-    <a href="#how-it-works">How it works</a>
+    <a href="#modes">How it works</a>
     <a href="#download">Download</a>
     <a href="#setup">Setup</a>
-    <a href="https://github.com/akkeshavan/ralph-releases/releases">Releases</a>
+    <a href="https://github.com/akkeshavan/ralph/releases">Releases</a>
   </div>
 </nav>
 
 <!-- ── Hero ── -->
 <div class="hero">
-  <div class="hero-badge">Powered by DeepSeek</div>
+  <div class="hero-badge">Agentic code generation</div>
   <h1>Ralph</h1>
-  <p>An agentic code generation CLI that explores, understands, implements, and verifies — autonomously.</p>
+  <p>A single CLI that works two ways: connect to the managed Ralphy backend (no API key needed), or bring your own key and call any LLM provider directly.</p>
   <div class="hero-buttons">
-    <a class="btn btn-primary" href="#download">Download Ralph</a>
-    <a class="btn btn-secondary" href="#how-it-works">How it works</a>
+    <a class="btn btn-primary" href="#download">Download</a>
+    <a class="btn btn-secondary" href="#modes">How it works</a>
   </div>
 </div>
 
 <hr />
 
-<!-- ── How it works ── -->
-<section id="how-it-works">
+<!-- ── Two modes ── -->
+<section id="modes">
   <div class="container">
-    <h2>How it works</h2>
-    <p class="section-lead">Ralph runs an explicit four-phase loop on every task. It doesn't guess — it explores your codebase first, then acts.</p>
+    <h2>Two modes, one binary</h2>
+    <p class="section-lead">Ralph ships as a single binary. How it connects to the AI is controlled by one flag.</p>
+
+    <div class="modes" style="padding:0;margin-bottom:2.5rem;">
+      <div class="mode-card featured">
+        <div><span class="mode-badge badge-managed">Managed</span></div>
+        <h3>Default — Ralphy backend</h3>
+        <p>Ralph connects to the Ralphy server at ralphy.vellur.in. The AI runs on our infrastructure — no LLM API key required. Sign up for a <code>RALPH_API_KEY</code> and start coding.</p>
+        <div class="mode-cmd"><span class="muted">$</span> ralph "fix the failing tests"</div>
+      </div>
+      <div class="mode-card">
+        <div><span class="mode-badge badge-byok">BYOK</span></div>
+        <h3>--byok — Bring Your Own Key</h3>
+        <p>Ralph calls the LLM provider directly from your machine using your own API key. Supports DeepSeek (default) and Sarvam. You pay the provider directly — no middleman.</p>
+        <div class="mode-cmd"><span class="muted">$</span> ralph --byok "fix the failing tests"</div>
+      </div>
+    </div>
+
+    <h2>How the agentic loop works</h2>
+    <p class="section-lead">In both modes, Ralph runs the same four-phase loop. It doesn't guess — it explores your codebase first, then acts.</p>
     <div class="phases">
       <div class="phase">
         <div class="phase-num">Phase 1</div>
@@ -449,7 +491,7 @@ brew install ralph</span></pre>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-mac-arm"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-apple-darwin.tar.gz</span></pre>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph/releases/latest/download/ralph-LATEST-aarch64-apple-darwin.tar.gz</span></pre>
       </div>
       <ol class="steps" start="2">
         <li><strong>Extract and install</strong></li>
@@ -466,13 +508,6 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
-      </div>
-      <ol class="steps" start="4">
-        <li><strong>Uninstall</strong></li>
-      </ol>
-      <div class="code-block">
-        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
       </div>
     </div>
 
@@ -498,7 +533,7 @@ brew install ralph</span></pre>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-mac-intel"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-apple-darwin.tar.gz</span></pre>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph/releases/latest/download/ralph-LATEST-x86_64-apple-darwin.tar.gz</span></pre>
       </div>
       <ol class="steps" start="2">
         <li><strong>Extract and install</strong></li>
@@ -515,13 +550,6 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
-      </div>
-      <ol class="steps" start="4">
-        <li><strong>Uninstall</strong></li>
-      </ol>
-      <div class="code-block">
-        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
       </div>
     </div>
 
@@ -529,14 +557,14 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
     <div id="tab-linux-x86" class="tab-panel">
       <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For standard 64-bit Linux (Ubuntu, Debian, Fedora, Arch, Alpine, etc.).</p>
 
-      <p style="margin-bottom:0.5rem;"><strong>Option A — musl (recommended)</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Statically linked — works on Ubuntu 18.04+, Debian 10+, Alpine, and any x86-64 Linux</span></p>
+      <p style="margin-bottom:0.5rem;"><strong>musl (recommended)</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Statically linked — works on Ubuntu 18.04+, Debian 10+, Alpine, and any x86-64 Linux</span></p>
       <ol class="steps">
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-linux-x86"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-musl.tar.gz</span></pre>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-musl.tar.gz</span></pre>
       </div>
       <ol class="steps" start="2">
         <li><strong>Extract and install</strong></li>
@@ -553,20 +581,6 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
-      </div>
-      <ol class="steps" start="4">
-        <li><strong>Uninstall</strong></li>
-      </ol>
-      <div class="code-block">
-        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
-      </div>
-
-      <p style="margin-top:1.5rem;margin-bottom:0.5rem;"><strong>Option B — glibc</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Requires glibc 2.39+ (Ubuntu 24.04+, Fedora 40+, Debian 13+)</span></p>
-      <div class="code-block">
-        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre id="dl-linux-x86-gnu"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-x86_64-unknown-linux-gnu.tar.gz</span></pre>
       </div>
     </div>
 
@@ -574,14 +588,14 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
     <div id="tab-linux-arm" class="tab-panel">
       <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For ARM64 Linux — AWS Graviton, Raspberry Pi 5, Oracle Ampere, etc.</p>
 
-      <p style="margin-bottom:0.5rem;"><strong>Option A — musl (recommended)</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Statically linked — works on Ubuntu 18.04+, Debian 10+, Alpine, and any ARM64 Linux</span></p>
+      <p style="margin-bottom:0.5rem;"><strong>musl (recommended)</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Statically linked — works on Ubuntu 18.04+, Debian 10+, Alpine, and any ARM64 Linux</span></p>
       <ol class="steps">
         <li><strong>Download the binary</strong></li>
       </ol>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre id="dl-linux-arm"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-musl.tar.gz</span></pre>
+<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-musl.tar.gz</span></pre>
       </div>
       <ol class="steps" start="2">
         <li><strong>Extract and install</strong></li>
@@ -599,34 +613,19 @@ rm -rf ralph.tar.gz ralph-*/</span></pre>
         <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
       </div>
-      <ol class="steps" start="4">
-        <li><strong>Uninstall</strong></li>
-      </ol>
-      <div class="code-block">
-        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre><span class="cmd">sudo rm /usr/local/bin/ralph</span></pre>
-      </div>
-
-      <p style="margin-top:1.5rem;margin-bottom:0.5rem;"><strong>Option B — glibc</strong> &nbsp;<span style="color:var(--muted);font-size:0.85rem;">Requires glibc 2.39+ (Ubuntu 24.04+, Fedora 40+, Debian 13+)</span></p>
-      <div class="code-block">
-        <div class="code-header"><span class="code-header-label">bash</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre id="dl-linux-arm-gnu"><span class="comment"># Download</span>
-<span class="cmd">curl -L -o ralph.tar.gz https://github.com/akkeshavan/ralph-releases/releases/latest/download/ralph-LATEST-aarch64-unknown-linux-gnu.tar.gz</span></pre>
-      </div>
     </div>
 
     <!-- Windows -->
     <div id="tab-windows" class="tab-panel">
       <p style="color:var(--muted);margin-bottom:1rem;font-size:0.9rem;">For Windows 10/11 x86-64. Run commands in PowerShell.</p>
       <ol class="steps">
-        <li><strong>Download the binary</strong> — <a id="win-dl-link" href="https://github.com/akkeshavan/ralph-releases/releases/latest">click here to download</a> the <code>.zip</code> file for Windows x86-64.</li>
+        <li><strong>Download the binary</strong> — <a id="win-dl-link" href="https://github.com/akkeshavan/ralph/releases/latest">click here to download</a> the <code>.zip</code> file for Windows x86-64.</li>
         <li><strong>Extract the zip</strong> — right-click the downloaded file and select <em>Extract All</em>.</li>
-        <li><strong>Move the binary</strong> — move <code>ralph.exe</code> to a folder that is in your <code>PATH</code>, for example <code>C:\Windows\System32</code>, or create a dedicated folder and add it to PATH:</li>
+        <li><strong>Move the binary</strong> — move <code>ralph.exe</code> to a folder that is in your <code>PATH</code>:</li>
       </ol>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">powershell (as Administrator)</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre><span class="comment"># Create a bin folder and add it to PATH (one-time setup)</span>
-<span class="cmd">New-Item -ItemType Directory -Force -Path "C:\tools\ralph"
+        <pre><span class="cmd">New-Item -ItemType Directory -Force -Path "C:\tools\ralph"
 Copy-Item ralph.exe "C:\tools\ralph\"
 [Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\tools\ralph", "Machine")</span></pre>
       </div>
@@ -636,13 +635,6 @@ Copy-Item ralph.exe "C:\tools\ralph\"
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">powershell</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">ralph --help</span></pre>
-      </div>
-      <ol class="steps" start="5">
-        <li><strong>Uninstall</strong></li>
-      </ol>
-      <div class="code-block">
-        <div class="code-header"><span class="code-header-label">powershell (as Administrator)</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-        <pre><span class="cmd">Remove-Item "C:\tools\ralph\ralph.exe"</span></pre>
       </div>
     </div>
   </div>
@@ -654,11 +646,28 @@ Copy-Item ralph.exe "C:\tools\ralph\"
 <section id="setup">
   <div class="container">
     <h2>Setup</h2>
-    <p class="section-lead">Ralph requires an API key for the LLM provider. Set it as an environment variable before running.</p>
+    <p class="section-lead">Choose a mode and set the corresponding environment variable, then point Ralph at your project.</p>
 
-    <div class="api-box">
-      <h3>DeepSeek</h3>
-      <p>Get your API key from <a href="https://platform.deepseek.com/" target="_blank">platform.deepseek.com</a>.</p>
+    <!-- Managed mode -->
+    <div class="setup-box">
+      <h3>Managed mode (default) — Ralphy backend</h3>
+      <p>Sign up at <a href="https://ralphy.vellur.in/apply" target="_blank">ralphy.vellur.in/apply</a> to get your <code>RALPH_API_KEY</code>. No LLM provider account needed.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-header-label">bash — ~/.zshrc or ~/.bashrc</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
+        <pre><span class="cmd">export RALPH_API_KEY="rph-..."</span></pre>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span class="code-header-label">powershell</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
+        <pre><span class="cmd">[Environment]::SetEnvironmentVariable("RALPH_API_KEY", "rph-...", "User")</span></pre>
+      </div>
+    </div>
+
+    <br />
+
+    <!-- BYOK mode -->
+    <div class="setup-box">
+      <h3>BYOK mode — Bring Your Own Key</h3>
+      <p>Get a DeepSeek API key from <a href="https://platform.deepseek.com/" target="_blank">platform.deepseek.com</a> and pass <code>--byok</code> when running.</p>
       <div class="code-block">
         <div class="code-header"><span class="code-header-label">bash — ~/.zshrc or ~/.bashrc</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">export DEEPSEEK_API_KEY="sk-..."</span></pre>
@@ -667,6 +676,7 @@ Copy-Item ralph.exe "C:\tools\ralph\"
         <div class="code-header"><span class="code-header-label">powershell</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
         <pre><span class="cmd">[Environment]::SetEnvironmentVariable("DEEPSEEK_API_KEY", "sk-...", "User")</span></pre>
       </div>
+      <p style="margin-top:0.75rem;font-size:0.875rem;">For Sarvam AI: set <code>SARVAM_API_KEY</code> and add <code>--sarvam</code> alongside <code>--byok</code>.</p>
     </div>
 
     <br />
@@ -674,38 +684,35 @@ Copy-Item ralph.exe "C:\tools\ralph\"
     <p class="section-lead">Point Ralph at your project and give it a task.</p>
 
     <div class="code-block">
-      <div class="code-header"><span class="code-header-label">bash — interactive mode</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-      <pre><span class="comment"># Launch in your project directory</span>
+      <div class="code-header"><span class="code-header-label">bash — managed mode (default)</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
+      <pre><span class="comment"># Interactive mode — connects to Ralphy backend</span>
 <span class="cmd">cd /path/to/your/project
 ralph</span>
 
-<span class="comment"># Type tasks at the >> prompt</span>
-<span class="cmd">&gt;&gt; explain the structure of this codebase
-&gt;&gt; add error handling to the database module
-&gt;&gt; run the tests and fix any failures
-&gt;&gt; exit</span></pre>
-    </div>
+<span class="comment"># Single-shot task</span>
+<span class="cmd">ralph "add error handling to the database module"</span>
 
-    <div class="code-block">
-      <div class="code-header"><span class="code-header-label">bash — single-shot mode</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
-      <pre><span class="comment"># Run a single task and exit</span>
-<span class="cmd">ralph "write unit tests for the auth module"</span>
-
-<span class="comment"># Use the pro model (extended thinking)</span>
+<span class="comment"># Use the pro model</span>
 <span class="cmd">ralph --pro "refactor the auth module"</span>
 
 <span class="comment"># Resume the last session</span>
-<span class="cmd">ralph --resume</span>
-
-<span class="comment"># Target a specific directory</span>
-<span class="cmd">ralph "fix the failing tests" --workspace /path/to/project</span>
-
-<span class="comment"># Preview actions without making changes</span>
-<span class="cmd">ralph "..." --dry-run</span></pre>
+<span class="cmd">ralph --resume</span></pre>
     </div>
 
     <div class="code-block">
-      <div class="code-header"><span class="code-header-label">bash — optional: web search</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
+      <div class="code-header"><span class="code-header-label">bash — BYOK mode</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
+      <pre><span class="comment"># Call DeepSeek directly with your own key</span>
+<span class="cmd">ralph --byok "write unit tests for the auth module"</span>
+
+<span class="comment"># Use Sarvam instead of DeepSeek</span>
+<span class="cmd">ralph --byok --sarvam "explain this codebase"</span>
+
+<span class="comment"># Point at a custom Ralphy server</span>
+<span class="cmd">ralph --server https://my.ralphy.server "fix the failing tests"</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><span class="code-header-label">bash — optional: web search (both modes)</span><button class="copy-btn" onclick="copyCode(this)" title="Copy">⧉</button></div>
       <pre><span class="comment"># Add one of these to enable web search during tasks</span>
 <span class="cmd">export BRAVE_API_KEY="BSA..."      # Brave Search (preferred)
 export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
@@ -717,7 +724,7 @@ export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
 
 <!-- ── Footer ── -->
 <footer>
-  <p>Ralph is distributed as a pre-built binary. &nbsp;·&nbsp; <a href="https://github.com/akkeshavan/ralph-releases/releases">All releases</a></p>
+  <p>Ralph — <a href="https://github.com/akkeshavan/ralph/releases">releases</a> &nbsp;·&nbsp; <a href="https://ralphy.vellur.in/apply">Apply for Ralphy beta</a></p>
 </footer>
 
 <script>
@@ -740,40 +747,36 @@ export SERP_API_KEY="..."          # SerpAPI (fallback)</span></pre>
     });
   }
 
-  // ── Fetch latest version and update download links ──
-  fetch('https://api.github.com/repos/akkeshavan/ralph-releases/releases/latest')
+  // ── Fetch latest version from akkeshavan/ralph and update download links ──
+  fetch('https://api.github.com/repos/akkeshavan/ralph/releases/latest')
     .then(r => r.json())
     .then(data => {
-      const tag = data.tag_name; // e.g. "v0.2.1"
-      const ver = tag; // keep the v prefix
+      const ver = data.tag_name; // e.g. "ralphy-v0.2.0"
 
       document.getElementById('version-badge').textContent = ver;
 
       const targets = {
-        'mac-arm':       'aarch64-apple-darwin',
-        'mac-intel':     'x86_64-apple-darwin',
-        'linux-x86':     'x86_64-unknown-linux-musl',
-        'linux-x86-gnu': 'x86_64-unknown-linux-gnu',
-        'linux-arm':     'aarch64-unknown-linux-musl',
-        'linux-arm-gnu': 'aarch64-unknown-linux-gnu',
+        'mac-arm':   'aarch64-apple-darwin',
+        'mac-intel': 'x86_64-apple-darwin',
+        'linux-x86': 'x86_64-unknown-linux-musl',
+        'linux-arm': 'aarch64-unknown-linux-musl',
       };
 
       for (const [key, target] of Object.entries(targets)) {
         const el = document.getElementById('dl-' + key);
         if (el) {
           const filename = `ralph-${ver}-${target}.tar.gz`;
-          const url = `https://github.com/akkeshavan/ralph-releases/releases/download/${ver}/${filename}`;
+          const url = `https://github.com/akkeshavan/ralph/releases/download/${ver}/${filename}`;
           el.innerHTML =
             `<span class="comment"># Download</span>\n` +
             `<span class="cmd">curl -L -o ralph.tar.gz ${url}</span>`;
         }
       }
 
-      // Windows link
       const winLink = document.getElementById('win-dl-link');
       if (winLink) {
         const winFile = `ralph-${ver}-x86_64-pc-windows-msvc.zip`;
-        winLink.href = `https://github.com/akkeshavan/ralph-releases/releases/download/${ver}/${winFile}`;
+        winLink.href = `https://github.com/akkeshavan/ralph/releases/download/${ver}/${winFile}`;
         winLink.textContent = `download ${winFile}`;
       }
     })
